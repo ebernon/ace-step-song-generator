@@ -1,7 +1,7 @@
 {
   "name": "Eric's Song Generator",
   "short_name": "Songs",
-  "description": "ACE-Step music generation running on a free Colab T4.",
+  "description": "ACE-Step music generation, running on a hosted GPU.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
