@@ -26,8 +26,8 @@ Google Colab's free T4 GPU. Nothing to install locally.
 # Cell 3 — REQUIRED FIX: Colab ships gradio 6.x, which breaks ACE-Step's UI
 !pip install -q gradio~=5.0
 
-# Cell 4 — launch with a public share link
-!acestep --share true --bf16 true --torch_compile false --cpu_offload true --overlapped_decode true
+# Cell 4 — launch with a public share link (bf16 OFF: T4 cuDNN cannot run the bf16 decoder)
+!acestep --share true --bf16 false --torch_compile false --cpu_offload true --overlapped_decode true
 ```
 
 ## Notes / gotchas (learned the hard way, 2026-07-22)
@@ -38,6 +38,6 @@ Google Colab's free T4 GPU. Nothing to install locally.
   takes several minutes; subsequent songs are faster.
 - Free Colab sessions last a few hours. **Download songs before closing** —
   the runtime's files are wiped. Restart = rerun the cells (fresh gradio.live URL).
-- If Cell 4 fails with a bf16/dtype error, change `--bf16 true` to `--bf16 false`.
+- **bf16 must be false on the T4.** With `--bf16 true` the UI loads and diffusion runs, but every generation dies at the final decode with `RuntimeError: GET was unable to find an engine to execute this computation` (cuDNN has no bf16 conv engine for the DCAE decoder on T4). fp32 is slower but works.
 - Colab's cell editor mangles multiline pasted/typed shell commands
   (autocomplete eats URLs); keep cells as single-line `&&`-joined commands.
