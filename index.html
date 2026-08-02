@@ -4,10 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Songs">
 <meta name="theme-color" content="#0b0b0f">
-<title>Song Generator</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127925;</text></svg>">
+<title>Eric&rsquo;s Song Generator</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <style>
   :root {
     --bg: #0b0b0f;
@@ -32,6 +37,12 @@
     padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
   }
   .wrap { width: 100%; max-width: 440px; }
+  .appicon {
+    display: block;
+    border-radius: 15px;
+    margin: 0 0 16px;
+    box-shadow: 0 8px 24px -10px rgba(124, 92, 255, 0.6);
+  }
   h1 {
     font-size: 30px;
     line-height: 1.15;
@@ -125,7 +136,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Song Generator</h1>
+  <img class="appicon" src="icon.svg" width="66" height="66" alt="">
+  <h1>Eric&rsquo;s Song Generator</h1>
   <p class="sub">ACE&#8209;Step running on a free Colab T4.</p>
 
   <a class="btn" id="go" href="#" aria-disabled="true" rel="noopener">Loading&hellip;</a>
