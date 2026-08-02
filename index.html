@@ -138,27 +138,26 @@
 <div class="wrap">
   <img class="appicon" src="icon.svg" width="66" height="66" alt="">
   <h1>Eric&rsquo;s Song Generator</h1>
-  <p class="sub">ACE&#8209;Step running on a free Colab T4.</p>
+  <p class="sub">ACE&#8209;Step, running on a hosted GPU. Always on.</p>
 
   <a class="btn" id="go" href="#" aria-disabled="true" rel="noopener">Loading&hellip;</a>
   <div class="status" id="status"><span class="dot"></span>Fetching current session link&hellip;</div>
 
   <div class="card">
-    <h2>If it says &ldquo;no interface is running&rdquo;</h2>
-    <p>The Colab session died. That is normal: free sessions last a few hours and end when the tab closes. The fix is to open the notebook and hit Runtime &rarr; Run all, then wait about ten minutes for the first song.</p>
+    <h2>If it says the GPU is busy</h2>
+    <p>The generator runs on a shared free GPU pool, so at peak times it can queue or ask you to wait. Nothing is broken and there is nothing to restart. Wait a minute and hit Generate again.</p>
     <div class="row">
-      <a class="mini" href="https://colab.research.google.com/drive/1bmjMO0ivq9LARmW7r2xuK1t80YwMsZ0S" rel="noopener">Open notebook</a>
-      <a class="mini" href="https://github.com/ebernon/ace-step-song-generator" rel="noopener">Recipe &amp; backup</a>
+      <a class="mini" href="https://github.com/ebernon/ace-step-song-generator" rel="noopener">Recipe &amp; notes</a>
     </div>
   </div>
 
-  <footer>First song of a session takes ~10 min, later ones 3&ndash;4 min.</footer>
+  <footer>A 30&ndash;60 second song takes well under a minute.</footer>
 </div>
 
 <script>
 (function () {
   // Baked-in fallback. The live value is whatever link.txt says in the repo.
-  var FALLBACK = "https://1f12c8e4fa19cbcb0f.gradio.live";
+  var FALLBACK = "https://ace-step-ace-step.hf.space/";
   var SRC = "https://raw.githubusercontent.com/ebernon/ace-step-song-generator/main/link.txt";
 
   var go = document.getElementById("go");
