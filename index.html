@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0b0f">
+<title>Song Generator</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127925;</text></svg>">
+<style>
+  :root {
+    --bg: #0b0b0f;
+    --card: #16161d;
+    --line: #2a2a35;
+    --text: #f2f2f5;
+    --muted: #8b8b99;
+    --accent: #7c5cff;
+    --accent-2: #b06cff;
+    --warn: #ffb020;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 400 17px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+  }
+  .wrap { width: 100%; max-width: 440px; }
+  h1 {
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+    font-weight: 650;
+  }
+  .sub { color: var(--muted); font-size: 15px; margin: 0 0 28px; }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 64px;
+    padding: 18px 22px;
+    border: 0;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    box-shadow: 0 10px 30px -8px rgba(124, 92, 255, 0.55);
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  }
+  .btn:active { transform: scale(0.978); box-shadow: 0 6px 18px -8px rgba(124,92,255,.5); }
+  .btn[aria-disabled="true"] {
+    background: #23232e;
+    color: var(--muted);
+    box-shadow: none;
+    pointer-events: none;
+  }
+  .status {
+    margin: 16px 2px 0;
+    font-size: 13.5px;
+    color: var(--muted);
+    word-break: break-all;
+    min-height: 20px;
+  }
+  .status b { color: #c9c9d6; font-weight: 500; }
+  .card {
+    margin-top: 30px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 20px;
+  }
+  .card h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--muted);
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  .card p { margin: 0 0 12px; font-size: 14.5px; color: #cfcfdb; }
+  .card p:last-child { margin-bottom: 0; }
+  .card a { color: var(--accent-2); text-decoration: none; border-bottom: 1px solid rgba(176,108,255,.35); }
+  .row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .mini {
+    flex: 1;
+    text-align: center;
+    padding: 12px 10px;
+    border-radius: 12px;
+    background: #1e1e27;
+    border: 1px solid var(--line);
+    color: #cfcfdb;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .mini:active { background: #262633; }
+  .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    margin-right: 7px;
+    vertical-align: 1px;
+  }
+  .dot.live { background: #35d07f; }
+  .dot.stale { background: var(--warn); }
+  footer { margin-top: 22px; text-align: center; color: #55555f; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Song Generator</h1>
+  <p class="sub">ACE&#8209;Step running on a free Colab T4.</p>
+
+  <a class="btn" id="go" href="#" aria-disabled="true" rel="noopener">Loading&hellip;</a>
+  <div class="status" id="status"><span class="dot"></span>Fetching current session link&hellip;</div>
+
+  <div class="card">
+    <h2>If it says &ldquo;no interface is running&rdquo;</h2>
+    <p>The Colab session died. That is normal: free sessions last a few hours and end when the tab closes. The fix is to open the notebook and hit Runtime &rarr; Run all, then wait about ten minutes for the first song.</p>
+    <div class="row">
+      <a class="mini" href="https://colab.research.google.com/drive/1bmjMO0ivq9LARmW7r2xuK1t80YwMsZ0S" rel="noopener">Open notebook</a>
+      <a class="mini" href="https://github.com/ebernon/ace-step-song-generator" rel="noopener">Recipe &amp; backup</a>
+    </div>
+  </div>
+
+  <footer>First song of a session takes ~10 min, later ones 3&ndash;4 min.</footer>
+</div>
+
+<script>
+(function () {
+  // Baked-in fallback. The live value is whatever link.txt says in the repo.
+  var FALLBACK = "https://1f12c8e4fa19cbcb0f.gradio.live";
+  var SRC = "https://raw.githubusercontent.com/ebernon/ace-step-song-generator/main/link.txt";
+
+  var go = document.getElementById("go");
+  var status = document.getElementById("status");
+
+  function activate(url, source) {
+    go.href = url;
+    go.textContent = "Open generator";
+    go.setAttribute("aria-disabled", "false");
+    go.setAttribute("target", "_blank");
+    var host = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    status.innerHTML =
+      '<span class="dot ' + (source === "live" ? "live" : "stale") + '"></span>' +
+      (source === "live" ? "Session " : "Cached link, may be stale: ") +
+      "<b>" + host + "</b>";
+  }
+
+  fetch(SRC + "?t=" + Date.now(), { cache: "no-store" })
+    .then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.text();
+    })
+    .then(function (t) {
+      var url = t.trim().split(/\s+/)[0];
+      if (!/^https:\/\/[\w.-]+/.test(url)) throw new Error("bad url");
+      activate(url, "live");
+    })
+    .catch(function () {
+      activate(FALLBACK, "fallback");
+    });
+})();
+</script>
+</body>
+</html>
