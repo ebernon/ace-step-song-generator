@@ -4,6 +4,22 @@ Suno-style song generator — style tags + lyrics in, full song out — running
 ACE-Step (open source, vocals, 19 languages incl. Spanish and French) on
 Google Colab's free T4 GPU. Nothing to install locally.
 
+## The permanent address
+
+**https://ace-step-song-generator.vercel.app** — bookmark this, not the
+`gradio.live` link. It never changes.
+
+That page is `index.html` in this repo, deployed on Vercel (project
+`ace-step-song-generator`, auto-deploys on every push to `main`). On load it
+fetches `link.txt` from this repo and points its button at whatever URL is in
+there.
+
+**To point it at a new session:** edit `link.txt` in this repo and put the new
+`https://xxxxx.gradio.live` URL in it, alone on the first line. Nothing else to
+do; no redeploy needed. The page picks it up within about 5 minutes (raw
+GitHub caches for 300s). `index.html` also carries a hardcoded fallback URL
+used only if the fetch fails.
+
 ## How to run
 
 1. Open `ACE_Step_Song_Generator.ipynb` in Google Colab
@@ -13,6 +29,8 @@ Google Colab's free T4 GPU. Nothing to install locally.
 3. Run the cells top to bottom.
 4. The last cell prints a public link like `https://xxxxx.gradio.live` —
    open it on any phone or browser. That's the generator.
+5. Paste that URL into `link.txt` in this repo so the permanent address above
+   points at the new session.
 
 ## The cells (for reference / manual rebuild)
 
